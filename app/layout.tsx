@@ -25,6 +25,9 @@ export const metadata: Metadata = {
   },
 };
 
+// Force dynamic rendering to avoid SSG issues with Web3Modal
+export const dynamic = 'force-dynamic';
+
 export default function RootLayout({
   children,
 }: Readonly<{

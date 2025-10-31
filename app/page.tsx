@@ -8,6 +8,9 @@ import { useState, useEffect } from "react";
 
 const BIN_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_BIN_CONTRACT_ADDRESS || "0xPlaceholder000";
 
+// Force dynamic rendering to avoid SSG issues with Web3Modal
+export const dynamic = 'force-dynamic';
+
 export default function Home() {
   const { isConnected } = useAccount();
   const [showDisclaimer, setShowDisclaimer] = useState(false);

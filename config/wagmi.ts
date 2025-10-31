@@ -11,13 +11,19 @@ const chainId = process.env.NEXT_PUBLIC_CHAIN_ID
 
 const chains = chainId === 56 ? [bsc] as const : [bscTestnet] as const;
 
+// Build connectors - always include walletConnect with projectId (will fail gracefully if empty)
 export const config = createConfig({
   chains: chainId === 56 ? [bsc] : [bscTestnet],
-  connectors: [
-    walletConnect({ projectId }),
-    injected(),
-    metaMask(),
-  ],
+  connectors: projectId 
+    ? [
+        walletConnect({ projectId }),
+        injected(),
+        metaMask(),
+      ]
+    : [
+        injected(),
+        metaMask(),
+      ],
   transports: {
     [bsc.id]: http(process.env.NEXT_PUBLIC_BSC_RPC_URL || "https://bsc-dataseed.binance.org/"),
     [bscTestnet.id]: http(process.env.NEXT_PUBLIC_BSC_TESTNET_RPC_URL || "https://data-seed-prebsc-1-s1.binance.org:8545/"),
