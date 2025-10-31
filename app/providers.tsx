@@ -13,26 +13,25 @@ const queryClient = new QueryClient();
 let web3ModalInitialized = false;
 
 // Initialize Web3Modal synchronously on client side
-if (typeof window !== "undefined") {
-  const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID;
+// Always initialize (even with empty projectId) to prevent hook errors
+if (typeof window !== "undefined" && !web3ModalInitialized) {
+  const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || "";
   
-  if (projectId && projectId !== "" && !web3ModalInitialized) {
-    try {
-      createWeb3Modal({
-        wagmiConfig: config,
-        projectId,
-        enableAnalytics: false,
-        enableOnramp: false,
-      });
+  try {
+    createWeb3Modal({
+      wagmiConfig: config,
+      projectId: projectId || "default", // Use default to prevent undefined error
+      enableAnalytics: false,
+      enableOnramp: false,
+    });
+    web3ModalInitialized = true;
+  } catch (error: any) {
+    // Modal might already be initialized - this is okay
+    if (error?.message?.includes("already initialized") || error?.message?.includes("Core is already initialized")) {
       web3ModalInitialized = true;
-    } catch (error: any) {
-      // Modal might already be initialized - this is okay
-      if (error?.message?.includes("already initialized") || error?.message?.includes("Core is already initialized")) {
-        web3ModalInitialized = true;
-      } else {
-        // Silently fail - will use injected wallet fallback
-        console.warn("Web3Modal initialization skipped:", error?.message || error);
-      }
+    } else {
+      // Silently fail - will use injected wallet fallback
+      console.warn("Web3Modal initialization skipped:", error?.message || error);
     }
   }
 }
