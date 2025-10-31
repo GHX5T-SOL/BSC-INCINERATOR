@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider } from "wagmi";
 import { config } from "@/config/wagmi";
 import { SafeWeb3ModalProvider } from "@/components/SafeWeb3ModalProvider";
+import { useEffect, useState } from "react";
 
 // Setup queryClient
 const queryClient = new QueryClient();
@@ -12,15 +13,20 @@ const queryClient = new QueryClient();
 // Track if Web3Modal has been initialized
 let web3ModalInitialized = false;
 
-// Initialize Web3Modal synchronously on client side
-// Always initialize (even with empty projectId) to prevent hook errors
-if (typeof window !== "undefined" && !web3ModalInitialized) {
-  const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || "";
+function initializeWeb3Modal() {
+  if (typeof window === "undefined" || web3ModalInitialized) return;
+  
+  const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID;
+  
+  if (!projectId || projectId === "") {
+    // Don't initialize without projectId - will use injected wallet fallback
+    return;
+  }
   
   try {
     createWeb3Modal({
       wagmiConfig: config,
-      projectId: projectId || "default", // Use default to prevent undefined error
+      projectId,
       enableAnalytics: false,
       enableOnramp: false,
     });
@@ -30,17 +36,30 @@ if (typeof window !== "undefined" && !web3ModalInitialized) {
     if (error?.message?.includes("already initialized") || error?.message?.includes("Core is already initialized")) {
       web3ModalInitialized = true;
     } else {
-      // Silently fail - will use injected wallet fallback
       console.warn("Web3Modal initialization skipped:", error?.message || error);
     }
   }
 }
 
 export function Providers({ children }: { children: React.ReactNode }) {
+  const [isInitialized, setIsInitialized] = useState(false);
+  
+  // Initialize synchronously on client side
+  useEffect(() => {
+    initializeWeb3Modal();
+    setIsInitialized(true);
+  }, []);
+
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <SafeWeb3ModalProvider>{children}</SafeWeb3ModalProvider>
+        {isInitialized ? (
+          <SafeWeb3ModalProvider>{children}</SafeWeb3ModalProvider>
+        ) : (
+          <div className="min-h-screen bg-black text-binance-yellow flex items-center justify-center">
+            <p className="pixel-font">Loading...</p>
+          </div>
+        )}
       </QueryClientProvider>
     </WagmiProvider>
   );
