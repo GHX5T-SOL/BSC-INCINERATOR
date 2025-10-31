@@ -100,6 +100,7 @@ export function NFTMint({ burnedTokens, onClose }: NFTMintProps) {
 
         <div className="flex justify-center">
           <div className="border-4 border-binance-yellow p-4 bg-black">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={nft.imageData}
               alt={nft.metadata.name}
@@ -159,6 +160,7 @@ export function NFTMint({ burnedTokens, onClose }: NFTMintProps) {
 
       <div className="flex justify-center">
         <div className="border-4 border-binance-yellow p-4 bg-black">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={nft.imageData}
             alt="Preview"

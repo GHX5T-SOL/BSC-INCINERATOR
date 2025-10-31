@@ -14,7 +14,7 @@ async function main() {
   const balance = await hre.ethers.provider.getBalance(deployer.address);
   console.log("Account balance:", hre.ethers.formatEther(balance), "BNB");
 
-  if (balance === 0n) {
+  if (balance === BigInt(0)) {
     console.warn("⚠️  Warning: Account has 0 BNB. Deployment will fail.");
     console.warn("Get testnet BNB from: https://testnet.binance.org/faucet-smart");
   }

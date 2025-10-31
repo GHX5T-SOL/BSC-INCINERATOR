@@ -1,6 +1,6 @@
 "use client";
 
-import { useAccount, useWalletClient } from "wagmi";
+import { useAccount, useWalletClient, usePublicClient } from "wagmi";
 import { parseUnits } from "viem";
 import { ERC20_ABI } from "@/utils/abis";
 
@@ -17,21 +17,22 @@ interface Token {
 export function useBurnTokens() {
   const { address } = useAccount();
   const { data: walletClient } = useWalletClient();
+  const publicClient = usePublicClient();
 
   const burnToken = async (token: Token) => {
-    if (!walletClient || !address) {
+    if (!walletClient || !address || !publicClient) {
       throw new Error("Wallet not connected");
     }
 
     const amount = parseUnits(token.balance, token.decimals);
 
-    // Check current allowance
-    const allowance = await walletClient.readContract({
+    // Check current allowance using publicClient
+    const allowance = (await publicClient.readContract({
       address: token.address as `0x${string}`,
       abi: ERC20_ABI,
       functionName: "allowance",
       args: [address, BURN_ADDRESS],
-    });
+    })) as bigint;
 
     // Approve if needed
     if (allowance < amount) {
@@ -41,7 +42,7 @@ export function useBurnTokens() {
         functionName: "approve",
         args: [BURN_ADDRESS, amount],
       });
-      await walletClient.waitForTransactionReceipt({ hash: approveHash });
+      await publicClient.waitForTransactionReceipt({ hash: approveHash });
     }
 
     // Transfer to burn address
@@ -52,7 +53,7 @@ export function useBurnTokens() {
       args: [BURN_ADDRESS, amount],
     });
 
-    const receipt = await walletClient.waitForTransactionReceipt({
+    const receipt = await publicClient.waitForTransactionReceipt({
       hash: transferHash,
     });
 

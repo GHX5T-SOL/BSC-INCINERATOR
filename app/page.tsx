@@ -35,6 +35,7 @@ export default function Home() {
       <header className="border-b-2 border-binance-yellow p-4">
         <div className="container mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img 
               src="/favicon.png" 
               alt="BSC Incinerator Logo" 
