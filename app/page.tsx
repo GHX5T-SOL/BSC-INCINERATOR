@@ -128,14 +128,55 @@ export default function Home() {
         </div>
 
         {!isConnected ? (
-          <div className="text-center py-20">
-            <p className="pixel-font text-lg md:text-xl mb-4">
-              Connect your wallet to continue.
-            </p>
-            <p className="pixel-font text-sm md:text-base text-gray-400">
-              连接您的钱包以继续。
-            </p>
-          </div>
+          disclaimerAccepted ? (
+            <div className="space-y-8">
+              {/* Explanation Section */}
+              <div className="border-4 border-binance-yellow p-6 md:p-8 bg-black bg-opacity-50 backdrop-blur-sm">
+                <h2 className="pixel-font text-xl md:text-2xl text-binance-yellow mb-6">
+                  What is BSC Incinerator? / 什么是 BSC Incinerator？
+                </h2>
+                
+                <div className="space-y-6 pixel-font text-sm md:text-base text-white leading-relaxed">
+                  <div className="space-y-3">
+                    <p>
+                      <span className="text-binance-yellow">EN:</span> BSC Incinerator is a platform that allows you to burn unwanted &ldquo;dust&rdquo; tokens from your wallet. These are typically small amounts of tokens that are not worth much but clutter your wallet. Simply connect your wallet, select the dust tokens you want to burn, and send them to our burn address. In return for each burn, you&apos;ll be able to mint a unique pixel art NFT featuring a Chinese character - completely free (you only pay the transaction fees).
+                    </p>
+                    <p>
+                      <span className="text-binance-yellow">CN:</span> BSC Incinerator 是一个允许您销毁钱包中不需要的&ldquo;灰尘&rdquo;代币的平台。这些通常是价值不高但会弄乱您钱包的小额代币。只需连接您的钱包，选择要销毁的灰尘代币，然后将它们发送到我们的销毁地址。作为每次销毁的回报，您将能够铸造一个独特的像素艺术 NFT，其中包含一个汉字 - 完全免费（您只需支付交易费用）。
+                    </p>
+                  </div>
+
+                  <div className="border-t-2 border-binance-yellow pt-4 space-y-3">
+                    <p>
+                      <span className="text-binance-yellow">EN:</span> <strong>How it works:</strong> 1) Connect your BSC wallet, 2) View your token holdings, 3) Select dust tokens to burn, 4) Approve and send tokens to the burn address, 5) Mint your free Chinese character NFT!
+                    </p>
+                    <p>
+                      <span className="text-binance-yellow">CN:</span> <strong>工作原理：</strong> 1) 连接您的 BSC 钱包，2) 查看您的代币持仓，3) 选择要销毁的灰尘代币，4) 批准并将代币发送到销毁地址，5) 铸造您免费的中文字符 NFT！
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Connect Wallet CTA */}
+              <div className="text-center py-8">
+                <p className="pixel-font text-lg md:text-xl mb-4 text-binance-yellow">
+                  Connect your wallet to get started / 连接您的钱包开始使用
+                </p>
+                <p className="pixel-font text-sm md:text-base text-gray-400 mb-6">
+                  Connect your BSC wallet using the button in the top right corner / 使用右上角的按钮连接您的 BSC 钱包
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div className="text-center py-20">
+              <p className="pixel-font text-lg md:text-xl mb-4">
+                Connect your wallet to continue.
+              </p>
+              <p className="pixel-font text-sm md:text-base text-gray-400">
+                连接您的钱包以继续。
+              </p>
+            </div>
+          )
         ) : (
           <TokenList />
         )}
