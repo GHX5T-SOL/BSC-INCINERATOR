@@ -6,7 +6,7 @@ import { DisclaimerModal } from "@/components/DisclaimerModal";
 import { useAccount } from "wagmi";
 import { useState, useEffect } from "react";
 
-const BIN_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_BIN_CONTRACT_ADDRESS || "0xPlaceholder000";
+const BIN_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_BIN_CONTRACT_ADDRESS || "0x0a35ba3E0dC5d1DdCf493Ee29ACf883Bc6cB4444";
 
 // Force dynamic rendering to avoid SSG issues with Web3Modal
 export const dynamic = 'force-dynamic';
